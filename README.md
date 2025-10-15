@@ -4,7 +4,7 @@ Tras los muros del VTT, donde la irrealidad se asienta en códigos binarios, se 
 
 Nuestra gratitud se dirige a los artífices de esta inmundicia palpable: jvir, NeV3rKilL y ParvusDomus, pues sin su obra, el caos no podría ser ordenado en el yermo digital.
 
-#Agradecimientos e información
+# Agradecimientos e información
 
 The Hill Press por poner el juego en nuestras manos y por permitirme usar el logo.
 A todos los que usan este sistema en FVTT, al fin y al cabo esto, sin usuarios, no tiene sentido.
