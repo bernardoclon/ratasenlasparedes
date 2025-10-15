@@ -1,0 +1,76 @@
+.item-type-selection {
+  font-family: 'Crimson', sans-serif;
+  padding: 10px;
+}
+
+.item-type-selection .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 10px;
+  background-image: url("/systems/ratasenlasparedes/img/paperb.png");
+  background-size: cover;
+  background-position: center;
+  border: solid 2px #726550;
+  box-shadow: 3px 3px 5px rgba(0,0,0,0.4);
+}
+
+.item-type-selection .selection-label {
+  font-family: Tox;
+  font-size: 1.2em;
+  color: #4a3d2b;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.item-type-selection .type-select {
+  background: rgba(255,255,255,0.7);
+  border: 1px solid #726550;
+  padding: 5px;
+  font-family: 'Crimson', sans-serif;
+  font-size: 1.1em;
+  color: #2b2416;
+  cursor: pointer;
+}
+
+.item-type-selection .type-select:focus {
+  outline: none;
+  border-color: #4a3d2b;
+  box-shadow: 0 0 5px rgba(74,61,43,0.5);
+}
+
+.item-type-selection .type-select option {
+  background: #efddc8;
+  padding: 5px;
+}
+
+/* Estilizar el diálogo completo */
+.dialog.item-creation .window-content {
+  background-image: url("/systems/ratasenlasparedes/img/back.jpg");
+  background-size: cover;
+}
+
+.dialog.item-creation .dialog-buttons {
+  gap: 10px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.dialog.item-creation .dialog-buttons button {
+  font-family: Tox;
+  background: rgba(239,221,200,0.9);
+  border: 1px solid #726550;
+  color: #4a3d2b;
+  padding: 5px 10px;
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  transition: all 0.2s ease;
+}
+
+.dialog.item-creation .dialog-buttons button:hover {
+  background: #4a3d2b;
+  color: #efddc8;
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+.dialog.item-creation .dialog-buttons button i {
+  margin-right: 5px;
+}
