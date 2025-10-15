@@ -1,4 +1,4 @@
-<div style= "text-align:center">
+<div align="center">
   
 # Ratas en las paredes
 
