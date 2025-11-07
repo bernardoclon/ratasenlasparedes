@@ -179,11 +179,13 @@ export class ratasenlasparedesActorSheet extends ActorSheet {
         const label = dataset.label ? `Realiza una tirada <strong>${difficultyText}${modText}</strong> de <strong>${dataset.label}</strong>` : '';
         
         const roll = new Roll(rollString, this.actor.system);
-        const result = await roll.evaluate({async: true});
-        await game.dice3d?.showForRoll(result);
-        const html = await result.render();
-        
-        await ChatMessage.create({
+            const result = await roll.evaluate({async: true});
+            if (game.dice3d) {
+                await game.dice3d.showForRoll(result, game.user, true);
+            }
+            const html = await result.render();
+            
+            await ChatMessage.create({
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             flags: {'ratasenlasparedes':{'text':label}},
             type: CONST.CHAT_MESSAGE_TYPES.ROLL,
@@ -199,7 +201,7 @@ export class ratasenlasparedesActorSheet extends ActorSheet {
             
             // Mostrar dados 3D si están disponibles
             if (game.dice3d) {
-                await game.dice3d.showForRoll(result);
+                await game.dice3d.showForRoll(result, game.user, true);
             }
 
             // Determinar el resultado
@@ -247,7 +249,9 @@ export class ratasenlasparedesActorSheet extends ActorSheet {
         const damageString = damageMod === 0 ? dataset.roll : `${dataset.roll} + (${damageMod})`;
         const roll = new Roll(damageString);
         const result = await roll.evaluate({async: true});
-        await game.dice3d?.showForRoll(result);
+        if (game.dice3d) {
+            await game.dice3d.showForRoll(result, game.user, true);
+        }
         const html = await result.render();
         
         const label = dataset.label ? `Causa daño con su <strong>${dataset.label}</strong>.` : '';
