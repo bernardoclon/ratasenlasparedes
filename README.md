@@ -6,7 +6,7 @@ Tras los muros del VTT, donde la irrealidad se asienta en códigos binarios, se 
 
 Nuestra gratitud se dirige a los artífices de esta genialidad palpable: jvir, NeV3rKilL y ParvusDomus, pues sin su obra, el caos no podría ser ordenado en el yermo digital.
 
-<img width="300" src="https://github.com/bernardoclon/ratasenlasparedes/blob/main/img/logop.png">
+<img width="250" src="https://github.com/bernardoclon/ratasenlasparedes/blob/main/img/logop.png">
 
 
 ## Agradecimientos e información
