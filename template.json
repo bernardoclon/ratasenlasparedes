@@ -1,0 +1,105 @@
+{
+  "Actor": {
+    "types": [
+      "character",
+      "npc"
+    ],
+    "templates": {
+      "base": {
+        "pc": {
+          "value": 0,
+          "min": 0,
+          "max": 0
+        },
+        "pv": {
+          "value": 0,
+          "min": 0,
+          "max": 0
+        },
+        "pe": {
+          "value": 0,
+          "min": 0
+        }
+      }
+    },
+    "character": {
+      "templates": ["base"],
+      "profesion": "",
+      "reputation": "",
+      "biography": "",
+      "attributes": {
+        "level": {
+          "value": 1
+        }
+      },
+      "abilities": {
+        "des": {
+          "value": 0
+        },
+        "ing": {
+          "value": 0
+        },
+        "mus": {
+          "value": 0
+        },
+        "vio": {
+          "value": 0
+        },
+        "vol": {
+          "value": 0
+        }
+      }
+    },
+    "npc": {
+      "templates": ["base"],
+      "profesion": "",
+      "reputation": "",
+      "biography": ""
+    }
+  },
+  "Item": {
+    "types": ["item", "weapon", "spell", "armor", "mean", "scar", "profesion", "reputation"],
+    "templates": {
+      "base": {
+        "description": {
+          "value": "",
+          "editor": "html",
+          "system": "core"
+        },
+        "quantity": 1,
+        "weight": 0
+      },
+      "effect": {
+        "tipo": "",
+        "campo": "",
+        "valor": 0
+      }
+    },
+    "item": {
+      "templates": ["base"]
+    },
+    "weapon": {
+        "templates": ["base"],
+        "damage": "1d6"
+    },
+    "armor": {
+        "templates": ["base"],
+        "protection": "0"
+    },
+    "mean": {
+        "templates": ["base"],
+        "type": "",
+        "value": "",
+        "mod": 0
+    },
+    "scar": {
+        "templates": ["base"]
+    },
+    "profesion": {
+        "templates": ["base"]
+    },
+    "reputation": {
+        "templates": ["base"]
+    }
+  }
+}
