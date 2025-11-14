@@ -94,7 +94,7 @@
                     <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                     {{#if item.system.damage}}
                                         <h4 class="flexrow">
-                                            <div class="item-name rollable" data-roll="2d6+@abilities.vio.value" data-label="{{item.name}}" data-roll-type="weapon" data-damage="{{item.damage}}" >{{item.name}}</div>{{log system}}
+                                            <div class="item-name rollable" data-roll="2d6+@abilities.vio.value" data-label="{{item.name}}" data-roll-type="weapon" data-damage="{{item.system.damage}}" >{{item.name}}</div>
                                             <div class="item-damage rollable" data-roll="{{item.system.damage}}" data-label="{{item.name}}" data-roll-type="damage" style="justify-self:start">({{item.system.damage}})</div>
                                         </h4>
                                         
