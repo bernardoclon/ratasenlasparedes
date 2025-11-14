@@ -8,7 +8,6 @@ export class ratasenlasparedesNpcSheet extends ActorSheet {
 
   /** @override */
   static get defaultOptions() {
-      console.log('error1');
     return mergeObject(super.defaultOptions, {
       classes: ["ratasenlasparedes", "sheet", "actor", "npc"],
       //template: "systems/ratasenlasparedes/templates/actor/npc-sheet.html",
@@ -255,7 +254,7 @@ export class ratasenlasparedesNpcSheet extends ActorSheet {
         let goal;
 
         if (attackResult._total <= 7) {
-            label += ` <strong>Falla</strong> y sufre <a class="entity-link" data-pack="ratasenlasparedes.ayudas" data-lookup="Consecuencias" draggable="true"><i class="fas fa-book-open"></i> dos Consecuencias}</a>.`;
+            label += ` <strong>Falla</strong> y sufre <a class="entity-link" data-pack="ratasenlasparedes.ayudas" data-lookup="Consecuencias" draggable="true"><i class="fas fa-book-open"></i> dos Consecuencias</a>.`;
             goal = "Fallo";
         } else if (attackResult._total <= 9) {
             label += ` Tiene <strong>éxito</strong>, pero sufre <a class="entity-link" data-pack="ratasenlasparedes.ayudas" data-lookup="Consecuencias" draggable="true"><i class="fas fa-book-open"></i> una Consecuencia</a>`;
@@ -264,7 +263,7 @@ export class ratasenlasparedesNpcSheet extends ActorSheet {
             label += ` Tiene <strong>éxito</strong> y elige <a class="entity-link" data-pack="ratasenlasparedes.ayudas" data-lookup="Consecuencias" draggable="true"><i class="fas fa-book-open"></i> una Consecuencia</a> para su objetivo.`;
             goal = "Exito";
         } else {
-            label += ` Tiene <strong>éxito</strong> y elige <a class="entity-link" data-pack="ratasenlasparedes.ayudas" data-lookup="Consecuencias" draggable="true"><i class="fas fa-book-open"></i> dos Consecuencias</a> para su objetvo.`;
+            label += ` Tiene <strong>éxito</strong> y elige <a class="entity-link" data-pack="ratasenlasparedes.ayudas" data-lookup="Consecuencias" draggable="true"><i class="fas fa-book-open"></i> dos Consecuencias</a> para su objetivo.`;
             goal = "!Oh sí!";
         }
         
@@ -283,9 +282,9 @@ export class ratasenlasparedesNpcSheet extends ActorSheet {
 
 
   async damageRoll(dataset) {
-      const damageMod = Array.from(this.actor.data.items).reduce(function (acu, current) {
-                          if (current.data.data.type == "Efecto" && current.data.data.value == "Daño") {
-                              acu += parseInt(current.data.data.mod);
+      const damageMod = Array.from(this.actor.items).reduce(function (acu, current) {
+                          if (current.system.type == "Efecto" && current.system.value == "Daño") {
+                              acu += parseInt(current.system.mod);
                           }
                           return acu;
                       }, 0);
