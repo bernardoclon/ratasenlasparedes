@@ -79,12 +79,9 @@ export class ratasenlasparedesNpcSheet extends ActorSheet {
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
 
-    // Add listeners to handle basic field changes
-    html.find('input,select').on('change', this._onChangeInput.bind(this));
-
     // Add Inventory Item
     html.find('.item-create').click(ev => this._onItemCreate(ev));
-
+    
     // Update Inventory Item
     html.find('.item-edit').click(ev => {
       const li = $(ev.currentTarget).parents(".item");
@@ -95,29 +92,38 @@ export class ratasenlasparedesNpcSheet extends ActorSheet {
     // Delete Inventory Item
     html.find('.item-delete').click(ev => {
       const li = $(ev.currentTarget).parents(".item");
-      this.actor.deleteEmbeddedDocuments("Item",[li.data("itemId")]);
-      li.slideUp(200, () => this.render(false));
+      if (li.length > 0) {
+        this.actor.deleteEmbeddedDocuments("Item",[li.data("itemId")]);
+        li.slideUp(200, () => this.render(false));
+      } else {
+        const itemId = $(ev.currentTarget).data("item-id");
+        this.actor.deleteEmbeddedDocuments("Item", [itemId]);
+      }
     });
 
+    // Clickable item links
+    html.find('.item-link').click(ev => {
+      const itemId = $(ev.currentTarget).data("item-id");
+      const item = this.actor.getEmbeddedDocument("Item", itemId);
+      item.sheet.render(true);
+    });
+
+    // Create specific items (Profesion/Reputation)
+    html.find('.item-create-specific').click(async (ev) => {
+      const type = ev.currentTarget.dataset.type;
+      if (!type) return;
+
+      const itemData = {
+        name: `Nueva ${type.charAt(0).toUpperCase() + type.slice(1)}`,
+        type: type,
+        system: {}
+      };
+
+      await this.actor.createEmbeddedDocuments("Item", [itemData]);
+    });
+
+    // Rollable abilities.
     html.find('.rollable').click(this._onRoll.bind(this));
-    
-    // profesion show.
-    html.find('.profesion').click( ev => {
-     const profesion = this.actor.system.items.find(i => i.type == "profesion");
-     if(profesion){
-         const item = this.actor.getOwnedItem(profesion._id);
-         item.sheet.render(true);
-     }
-    });
-    // profesion show.
-    html.find('.reputation').click( ev => {
-     const reputation = this.actor.system.items.find(i => i.type == "reputation");
-     if(reputation){
-         const item = this.actor.getOwnedItem(reputation._id);
-         item.sheet.render(true);
-     }
-    });
-    
   }
 
   /* -------------------------------------------- */
@@ -211,8 +217,8 @@ export class ratasenlasparedesNpcSheet extends ActorSheet {
 
     // Assign and return
     actorData.gear = gear;
-    actorData.profesion = profesion;
-    actorData.reputation = reputation;
+    actorData.profesion = profesion[0];
+    actorData.reputation = reputation[0];
     actorData.weapon = weapon;
     actorData.scar = scar;
     actorData.mean = mean;

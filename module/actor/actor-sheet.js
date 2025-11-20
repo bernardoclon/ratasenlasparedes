@@ -187,7 +187,9 @@ export class ratasenlasparedesActorSheet extends ActorSheet {
         const label = dataset.label ? `Realiza una tirada <strong>${difficultyText}${modText}</strong> de <strong>${dataset.label}</strong>` : '';
         
         const roll = new Roll(rollString, this.actor.system);
+            AudioHelper.play({src: CONFIG.sounds.dice, volume: 0.8, autoplay: true, loop: false}, true);
             const result = await roll.evaluate({async: true});
+            
             if (game.dice3d) {
                 await game.dice3d.showForRoll(result, game.user, true);
             }
@@ -204,8 +206,39 @@ export class ratasenlasparedesActorSheet extends ActorSheet {
     
     else if (dataset.rollType === "spell") {
         try {
-            const roll = new Roll(dataset.roll, this.actor.system);
-            const result = await roll.evaluate();
+            const dialogContent = await renderTemplate("systems/ratasenlasparedes/templates/dialogs/difficulty-dialog.html", {
+                title: `Tirada de ${dataset.label}`
+            });
+
+            let difficulty = await new Promise(resolve => {
+                new Dialog({
+                    title: "Dificultad de la Tirada",
+                    content: dialogContent,
+                    buttons: {
+                        roll: {
+                            icon: '<i class="fas fa-dice-d20"></i>',
+                            label: "Tirar",
+                            callback: html => {
+                                const selected = html.find('[name="difficulty"]:checked');
+                                return resolve(selected.val());
+                            }
+                        }
+                    },
+                    default: "roll",
+                    classes: ["ratas-difficulty-dialog"]
+                }).render(true);
+            });
+
+            // Preparar la tirada con la dificultad seleccionada
+            const difficultyText = difficulty === "+2" ? "fácil" : 
+                                  difficulty === "-2" ? "difícil" : 
+                                  "normal";
+
+            const modText = difficulty === "0" ? "" : ` (${difficulty})`;
+            const rollString = difficulty === "0" ? dataset.roll : `${dataset.roll} ${difficulty}`;
+            const roll = new Roll(rollString, this.actor.system);
+            AudioHelper.play({src: CONFIG.sounds.dice, volume: 0.8, autoplay: true, loop: false}, true);
+            const result = await roll.evaluate({async: true});
             
             // Mostrar dados 3D si están disponibles
             if (game.dice3d) {
@@ -213,7 +246,7 @@ export class ratasenlasparedesActorSheet extends ActorSheet {
             }
 
             // Determinar el resultado
-            let label = dataset.label ? `Usa su <strong>${dataset.label}</strong>.` : '';
+            let label = dataset.label ? `Usa su <strong>${dataset.label}</strong> con una tirada <strong>${difficultyText}${modText}</strong>.` : '';
             let goal;
 
             if (result.total <= 2) {
@@ -256,6 +289,7 @@ export class ratasenlasparedesActorSheet extends ActorSheet {
 
         const damageString = damageMod === 0 ? dataset.roll : `${dataset.roll} + (${damageMod})`;
         const roll = new Roll(damageString);
+        AudioHelper.play({src: CONFIG.sounds.dice, volume: 0.8, autoplay: true, loop: false}, true);
         const result = await roll.evaluate({async: true});
         if (game.dice3d) {
             await game.dice3d.showForRoll(result, game.user, true);
@@ -275,7 +309,38 @@ export class ratasenlasparedesActorSheet extends ActorSheet {
 
     else if (dataset.rollType === "weapon") {
         try {
-            const roll = new Roll(dataset.roll, this.actor.system);
+            const dialogContent = await renderTemplate("systems/ratasenlasparedes/templates/dialogs/difficulty-dialog.html", {
+                title: `Tirada de ${dataset.label}`
+            });
+
+            let difficulty = await new Promise(resolve => {
+                new Dialog({
+                    title: "Dificultad de la Tirada",
+                    content: dialogContent,
+                    buttons: {
+                        roll: {
+                            icon: '<i class="fas fa-dice-d20"></i>',
+                            label: "Tirar",
+                            callback: html => {
+                                const selected = html.find('[name="difficulty"]:checked');
+                                return resolve(selected.val());
+                            }
+                        }
+                    },
+                    default: "roll",
+                    classes: ["ratas-difficulty-dialog"]
+                }).render(true);
+            });
+
+            // Preparar la tirada con la dificultad seleccionada
+            const difficultyText = difficulty === "+2" ? "fácil" : 
+                                  difficulty === "-2" ? "difícil" : 
+                                  "normal";
+
+            const modText = difficulty === "0" ? "" : ` (${difficulty})`;
+            const rollString = difficulty === "0" ? dataset.roll : `${dataset.roll} ${difficulty}`;
+            const roll = new Roll(rollString, this.actor.system);
+            AudioHelper.play({src: CONFIG.sounds.dice, volume: 0.8, autoplay: true, loop: false}, true);
             const result = await roll.evaluate();
             
             // Mostrar dados 3D si están disponibles
@@ -327,6 +392,7 @@ export class ratasenlasparedesActorSheet extends ActorSheet {
 
         const damageString = damageMod === 0 ? dataset.roll : `${dataset.roll} + (${damageMod})`;
         const roll = new Roll(damageString);
+        AudioHelper.play({src: CONFIG.sounds.dice, volume: 0.8, autoplay: true, loop: false}, true);
         const result = await roll.evaluate({async: true});
         if (game.dice3d) {
             await game.dice3d.showForRoll(result, game.user, true);
@@ -421,6 +487,7 @@ Hooks.on('renderChatMessage', (message, html, data) => {
         const actor = ChatMessage.getSpeakerActor(speaker);
         
         const roll = new Roll(dataset.roll, actor ? actor.system : {});
+        AudioHelper.play({src: CONFIG.sounds.dice, volume: 0.8, autoplay: true, loop: false}, true);
         const result = await roll.evaluate({async: true});
         if (game.dice3d) {
             await game.dice3d.showForRoll(result, game.user, true);

@@ -6,12 +6,32 @@
                 <input name="name" type="text" value="{{actor.name}}" data-dtype="String" placeholder="{{localize 'RATASENLASPAREDES.Nombre'}}"/>
             </div>
             <div class="flexrow">
-                <label class="resource-label reputation">Reputación: </label>
-                <input name="system.reputation" type="text" value="{{system.reputation}}" placeholder="Reputación"/>
+                <div class="form-group item-input">
+                    <label>Reputación</label>
+                    <div class="form-fields">
+                        {{#if reputation}}
+                            <a class="item-link" data-item-id="{{reputation._id}}">{{reputation.name}}</a>
+                            <a class="item-control item-delete" title="Borrar Reputación" data-item-id="{{reputation._id}}"><i class="fas fa-trash"></i></a>
+                        {{else}}
+                            <input type="text" value="" placeholder="Añadir Reputación" disabled/>
+                            <a class="item-control item-create-specific" title="Añadir Reputación" data-type="reputation"><i class="fas fa-plus"></i></a>
+                        {{/if}}
+                    </div>
+                </div>
             </div>
             <div class="flexrow">
-                <label class="resource-label profesion">Profesión: </label>
-                <input name="system.profesion" type="text" value="{{system.profesion}}" placeholder="Profesión"/>
+                <div class="form-group item-input">
+                    <label>Profesión</label>
+                    <div class="form-fields">
+                        {{#if profesion}}
+                            <a class="item-link" data-item-id="{{profesion._id}}">{{profesion.name}}</a>
+                            <a class="item-control item-delete" title="Borrar Profesión" data-item-id="{{profesion._id}}"><i class="fas fa-trash"></i></a>
+                        {{else}}
+                            <input type="text" value="" placeholder="Añadir Profesión" disabled/>
+                            <a class="item-control item-create-specific" title="Añadir Profesión" data-type="profesion"><i class="fas fa-plus"></i></a>
+                        {{/if}}
+                    </div>
+                </div>
             </div>
         </div>
         <img class="logo-img" src="/systems/ratasenlasparedes/img/logo.png" title="Ratas en lass paredes" height="120"/>
