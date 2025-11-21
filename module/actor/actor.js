@@ -52,6 +52,7 @@ export class ratasenlasparedesActor extends Actor {
         if (item.type === 'stigma' && item.system.atributo === 'pv') pvstigmaModifier -= 1;
         if (item.type === 'mean' && item.system.atributo === 'pv') pvstigmaModifier += 1;
         if (item.type === 'mean' && item.system.atributo === 'pc') pcstigmaModifier += 1;
+        if (item.type === 'stigma' && item.system.atributo === 'pc') pcstigmaModifier -= 1;
     }
 
     // --- CÁLCULO AUTOMÁTICO DE MÁXIMOS (CEILING) ---

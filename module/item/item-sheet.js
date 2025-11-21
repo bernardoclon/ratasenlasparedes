@@ -195,11 +195,6 @@ export class ratasenlasparedesItemSheet extends ItemSheet {
         updateData[field] = value;
       }
 
-      // User story: if changing system.type from 'mean' to 'stigma', also reset system.atributo.
-      if (field === 'system.type' && value === 'stigma' && this.item.system.type === 'mean') {
-        updateData['system.atributo'] = 'ninguno';
-      }
-
       await this.item.update(updateData);
     });
   }

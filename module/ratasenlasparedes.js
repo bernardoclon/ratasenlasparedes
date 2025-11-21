@@ -153,6 +153,9 @@ Hooks.once('init', async function () {
             if (stigma.system.type === 'mean' && stigma.system.atributo === 'pc') {
                 pcstigmaModifier += 1;
             }
+            if (stigma.system.type === 'stigma' && stigma.system.atributo === 'pc') {
+                pcstigmaModifier -= 1;
+            }
         }
     
         // --- PV Ceiling and Clamping ---
