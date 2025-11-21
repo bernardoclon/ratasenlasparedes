@@ -12,7 +12,7 @@ export class ItemTypeSelection extends Dialog {
       profesion: "Profesión",
       reputation: "Reputación",
       mean: "Objeto",
-      scar: "Cicatriz"
+      stigma: "Estigma"
     };
 
     // Filter types if allowedTypes is provided
@@ -84,8 +84,8 @@ export class ratasenlasparedesItemSheet extends ItemSheet {
       return defaultTemplate;
     }
     
-    if (this.item.type === 'scar') {
-      return `${path}/scar-sheet.html`;
+    if (this.item.type === 'stigma') {
+      return `${path}/stigma-sheet.html`;
     }
     
     // Intenta usar el template específico del tipo, si falla usa el por defecto
@@ -118,9 +118,11 @@ export class ratasenlasparedesItemSheet extends ItemSheet {
     context.system.weight = this.item.system.weight;
     context.system.description = this.item.system.description || "";
 
-    // Handle mean and scar specific data
-    if (this.item.type === 'scar') {
-      context.system.description = this.item.system.description || "";
+    // Handle mean and stigma specific data
+    if (this.item.type === 'stigma') {
+      context.system.atributo = this.item.system.atributo || "ninguno";
+      context.system.type = this.item.system.type || "";
+      context.system.description = this.item.system.description || "";      
     }
     
     // Handle weapon-specific fields
@@ -191,6 +193,11 @@ export class ratasenlasparedesItemSheet extends ItemSheet {
         updateData[field] = value;
       } else {
         updateData[field] = value;
+      }
+
+      // User story: if changing system.type from 'mean' to 'stigma', also reset system.atributo.
+      if (field === 'system.type' && value === 'stigma' && this.item.system.type === 'mean') {
+        updateData['system.atributo'] = 'ninguno';
       }
 
       await this.item.update(updateData);

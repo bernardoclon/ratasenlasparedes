@@ -256,6 +256,15 @@
   font-family: "Crimson", sans-serif;
 }
 
+.ratasenlasparedes .item-form select {
+  border: 0;
+  border-bottom: dotted 1px;
+  background: rgba(0, 0, 0, 0.05);
+  padding-left: 5px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
 .ratasenlasparedes .sheet-header {
   -webkit-box-flex: 0;
   -ms-flex: 0 0 210px;

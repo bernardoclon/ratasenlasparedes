@@ -1,0 +1,41 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <img class="profile-img" src="{{img}}" data-edit="img" title="{{name}}"/>
+        <div class="header-fields">
+            <h1 class="charname"><input name="name" type="text" value="{{name}}" placeholder="Nombre"/></h1>
+            <div class="grid grid-2col">
+              <div class="resource">
+                <label class="resource-label" for="system.type">Tipo</label>
+                <select name="system.type" id="system.type">
+                  <option value="stigma" {{#if (eq system.type "stigma")}}selected{{/if}}>Cicatriz</option>
+                  <option value="mean" {{#if (eq system.type "mean")}}selected{{/if}}>Mejora</option>
+                </select>
+              </div>
+              <div class="resource">
+                <label class="resource-label" for="system.atributo">Atributo</label>
+                <select name="system.atributo" id="system.atributo">
+                  <option value="ninguno" {{#if (eq system.atributo "ninguno")}}selected{{/if}}>Ninguno</option>
+                  <option value="pv" {{#if (eq system.atributo "pv")}}selected{{/if}}>PV</option>
+                  {{#if (eq system.type "mean")}}
+                  <option value="pc" {{#if (eq system.atributo "pc")}}selected{{/if}}>PC</option>
+                  {{/if}}
+                </select>
+              </div>
+            </div>
+        </div>
+    </header>
+
+    {{!-- Sheet Tab Navigation --}}
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="description">Description</a>
+    </nav>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+
+        {{!-- Description Tab --}}
+        <div class="tab" data-group="primary" data-tab="description">
+            {{editor enrichedDescription target="system.description" button=true owner=true editable=editable engine="prosemirror" collaborate=false}}
+        </div>
+    </section>
+</form>

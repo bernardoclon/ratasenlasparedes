@@ -104,6 +104,12 @@ export class ratasenlasparedesActorSheet extends ActorSheet {
 
     // Rollable abilities.
     html.find('.rollable').click(this._onRoll.bind(this));
+
+    // Add immediate update for PV and PC max values
+    html.find('input[name="system.pv.max"], input[name="system.pv.value"], input[name="system.pc.max"], input[name="system.pc.value"]').on('change', async event => {
+        await this._onSubmit(event); // Trigger form submission on change
+        this.render(false); // Update the sheet content to reflect changes
+    });
   }
 
   /* -------------------------------------------- */
@@ -124,7 +130,7 @@ export class ratasenlasparedesActorSheet extends ActorSheet {
     const allowedTypes = {
       items: ['weapon', 'armor'],
       spells: ['spell'],
-      scares: ['scar'],
+      stigmaes: ['stigma'],
       resources: ['item']
     };
 
@@ -426,7 +432,7 @@ console.log(sheetData);
     const profesion = [];
     const reputation = [];
     const weapon = [];
-    const scar = [];
+    const stigma = [];
     const mean = [];
     const spell = [];
     const resource = [];
@@ -456,9 +462,9 @@ console.log(sheetData);
       else if (i.type === 'weapon') {
         weapon.push(i);
       }
-      // Append to scar.
-      else if (i.type === 'scar') {
-        scar.push(i);
+      // Append to stigma.
+      else if (i.type === 'stigma') {
+        stigma.push(i);
       }
       // Append to spell.
       else if (i.type === 'spell') {
@@ -471,7 +477,7 @@ console.log(sheetData);
     actorData.profesion = profesion[0];
     actorData.reputation = reputation[0];
     actorData.weapon = weapon;
-    actorData.scar = scar;
+    actorData.stigma = stigma;
     actorData.mean = mean;
     actorData.spell = spell;
     actorData.resource = resource;

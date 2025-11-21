@@ -144,7 +144,7 @@ export class ratasenlasparedesNpcSheet extends ActorSheet {
     const allowedTypes = {
       items: ['weapon', 'armor'],
       spells: ['spell'],
-      scares: ['scar'],
+      stigmaes: ['stigma'],
       resources: ['item']
     };
 
@@ -171,7 +171,7 @@ export class ratasenlasparedesNpcSheet extends ActorSheet {
     const profesion = [];
     const reputation = [];
     const weapon = [];
-    const scar = [];
+    const stigma = [];
     const mean = [];
     const spell = [];
     const resource = [];
@@ -201,9 +201,9 @@ export class ratasenlasparedesNpcSheet extends ActorSheet {
       else if (i.type === 'weapon') {
         weapon.push(i);
       }
-      // Append to scar.
-      else if (i.type === 'scar') {
-        scar.push(i);
+      // Append to stigma.
+      else if (i.type === 'stigma') {
+        stigma.push(i);
       }
       // Append to mean.
       else if (i.type === 'mean') {
@@ -220,7 +220,7 @@ export class ratasenlasparedesNpcSheet extends ActorSheet {
     actorData.profesion = profesion[0];
     actorData.reputation = reputation[0];
     actorData.weapon = weapon;
-    actorData.scar = scar;
+    actorData.stigma = stigma;
     actorData.mean = mean;
     actorData.spell = spell;
     actorData.resource = resource;
@@ -239,71 +239,107 @@ export class ratasenlasparedesNpcSheet extends ActorSheet {
     
     if (!dataset.roll) return;
 
-    // Setup dificulty based on key modifiers
-    let difficulty = ["0", "normal"];
-    if (event.ctrlKey || event.metaKey)
-        difficulty = ["-2", "difícil"];
-    if (event.altKey)
-        difficulty = ["-1", "arriesgada"];
-    if (event.shiftKey)
-        difficulty = ["+2", "fácil"];
+    if (dataset.rollType === "weapon") {
+        try {
+            const dialogContent = await renderTemplate("systems/ratasenlasparedes/templates/dialogs/difficulty-dialog.html", {
+                title: `Tirada de ${dataset.label}`
+            });
 
-    let rollString = dataset.roll;
+            let difficulty = await new Promise(resolve => {
+                new Dialog({
+                    title: "Dificultad de la Tirada",
+                    content: dialogContent,
+                    buttons: {
+                        roll: {
+                            icon: '<i class="fas fa-dice-d20"></i>',
+                            label: "Tirar",
+                            callback: html => {
+                                const selected = html.find('[name="difficulty"]:checked');
+                                return resolve(selected.val());
+                            }
+                        }
+                    },
+                    default: "roll",
+                    classes: ["ratas-difficulty-dialog"]
+                }).render(true);
+            });
+
+            // Preparar la tirada con la dificultad seleccionada
+            const difficultyText = difficulty === "+2" ? "fácil" : 
+                                  difficulty === "-2" ? "difícil" : 
+                                  "normal";
+
+            const modText = difficulty === "0" ? "" : ` (${difficulty})`;
+            const rollString = difficulty === "0" ? dataset.roll : `${dataset.roll} ${difficulty}`;
+            const roll = new Roll(rollString, this.actor.system);
+            AudioHelper.play({src: CONFIG.sounds.dice, volume: 0.8, autoplay: true, loop: false}, true);
+            const result = await roll.evaluate();
+            
+            // Mostrar dados 3D si están disponibles
+            if (game.dice3d) {
+                await game.dice3d.showForRoll(result, game.user, true);
+            }
+
+            // Determinar el resultado
+            let label = dataset.label ? `Usa su <strong>${dataset.label}</strong>.` : '';
+            let goal;
+
+            if (result.total <= 7) {
+                label += ` <strong>Falla</strong> y sufre <a class="entity-link" data-pack="ratasenlasparedes.ayudas" data-lookup="Consecuencias" draggable="true"><i class="fas fa-book-open"></i> dos Consecuencias</a>.`;
+                goal = "Fallo";
+            } else if (result.total <= 9) {
+                label += ` Tiene <strong>éxito</strong>, pero sufre <a class="entity-link" data-pack="ratasenlasparedes.ayudas" data-lookup="Consecuencias" draggable="true"><i class="fas fa-book-open"></i> una Consecuencia</a>`;
+                goal = "Parcial";
+            } else if (result.total <= 11) {
+                label += ` Tiene <strong>éxito</strong> y elige <a class="entity-link" data-pack="ratasenlasparedes.ayudas" data-lookup="Consecuencias" draggable="true"><i class="fas fa-book-open"></i> una Consecuencia</a> para su objetivo.`;
+                goal = "Exito";
+            } else {
+                label += ` Tiene <strong>éxito</strong> y elige <a class="entity-link" data-pack="ratasenlasparedes.ayudas" data-lookup="Consecuencias" draggable="true"><i class="fas fa-book-open"></i> dos Consecuencias</a> para su objetivo.`;
+                goal = "¡Oh sí!";
+            }
+
+            // Renderizar el resultado de la tirada
+            const html = await result.render();
+
+            // Crear un solo mensaje en el chat
+            await ChatMessage.create({
+                speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+                flags: {'ratasenlasparedes':{'text':label, 'goal':goal}},
+                type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+                roll: result,
+                content: html
+            });
+        } catch (error) {
+            console.error("Error en la tirada de arma:", error);
+        }
+    }
     
-    if (rollType === "weapon") {
-        if (difficulty[0] !== "0") {
-            rollString = dataset.roll + ' ' + difficulty[0];
-        }
-        let roll = new Roll(rollString, this.actor.system);
-        let label = dataset.label ? `Usa su <strong>${dataset.label}</strong>${difficulty[0] !== "0" ? ` en una situación <strong>${difficulty[1]}</strong>` : ''}.` : '';
-        let attackResult = await roll.roll();
-        let goal;
+    else if (dataset.rollType === "damage") {
+        const damageMod = Array.from(this.actor.items).reduce((acu, current) => {
+            if (current.system.type === "Efecto" && current.system.value === "Daño") {
+                return acu + parseInt(current.system.mod);
+            }
+            return acu;
+        }, 0);
 
-        if (attackResult._total <= 7) {
-            label += ` <strong>Falla</strong> y sufre <a class="entity-link" data-pack="ratasenlasparedes.ayudas" data-lookup="Consecuencias" draggable="true"><i class="fas fa-book-open"></i> dos Consecuencias</a>.`;
-            goal = "Fallo";
-        } else if (attackResult._total <= 9) {
-            label += ` Tiene <strong>éxito</strong>, pero sufre <a class="entity-link" data-pack="ratasenlasparedes.ayudas" data-lookup="Consecuencias" draggable="true"><i class="fas fa-book-open"></i> una Consecuencia</a>`;
-            goal = "Parcial";
-        } else if (attackResult._total <= 11) {
-            label += ` Tiene <strong>éxito</strong> y elige <a class="entity-link" data-pack="ratasenlasparedes.ayudas" data-lookup="Consecuencias" draggable="true"><i class="fas fa-book-open"></i> una Consecuencia</a> para su objetivo.`;
-            goal = "Exito";
-        } else {
-            label += ` Tiene <strong>éxito</strong> y elige <a class="entity-link" data-pack="ratasenlasparedes.ayudas" data-lookup="Consecuencias" draggable="true"><i class="fas fa-book-open"></i> dos Consecuencias</a> para su objetivo.`;
-            goal = "!Oh sí!";
+        const damageString = damageMod === 0 ? dataset.roll : `${dataset.roll} + (${damageMod})`;
+        const roll = new Roll(damageString);
+        AudioHelper.play({src: CONFIG.sounds.dice, volume: 0.8, autoplay: true, loop: false}, true);
+        const result = await roll.evaluate({async: true});
+        if (game.dice3d) {
+            await game.dice3d.showForRoll(result, game.user, true);
         }
+        const html = await result.render();
         
-        let attackData = {
+        const label = dataset.label ? `Causa daño con su <strong>${dataset.label}</strong>.` : '';
+        
+        await ChatMessage.create({
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            flags: {'ratasenlasparedes':{'text':label, 'goal':goal, 'detail': attackResult.result}},
-            flavor: label,
-        };
-        
-        attackResult.toMessage(attackData);
+            flags: {'ratasenlasparedes':{'text':label}},
+            type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+            content: html,
+            roll: result
+        });
     }
-    else if (rollType === "damage") {
-        await this.damageRoll(dataset);
-    }
-  }
-
-
-  async damageRoll(dataset) {
-      const damageMod = Array.from(this.actor.items).reduce(function (acu, current) {
-                          if (current.system.type == "Efecto" && current.system.value == "Daño") {
-                              acu += parseInt(current.system.mod);
-                          }
-                          return acu;
-                      }, 0);
-      const rollString = damageMod === 0 ? dataset.roll : `${dataset.roll} + (${damageMod})`; 
-      const roll = new Roll(rollString);
-      const label = dataset.label ? `Causa daño con su <strong>${dataset.label}</strong>.` : '';
-      const attackResult = await roll.roll();
-      const attackData = {
-          speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-          flags: {'ratasenlasparedes':{'text':label}},
-          flavor: label,
-      };
-          
-      attackResult.toMessage(attackData);
   }
 }

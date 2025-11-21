@@ -98,7 +98,7 @@
         <a class="item" data-tab="resources">Recursos</a>
         <a class="item" data-tab="items">Equipo</a>
         <a class="item" data-tab="spells">Hechizos</a>
-        <a class="item" data-tab="scares">Cicatrices</a>        
+        <a class="item" data-tab="stigmaes">Cicatrices / Mejoras</a>        
     </nav>
 
     {{!-- Sheet Body --}}
@@ -181,17 +181,17 @@
             </ol>
         </div>
         
-        {{!-- Owned Scares Tab --}}
-        <div class="tab items" data-group="primary" data-tab="scares">
+        {{!-- Owned stigmaes Tab --}}
+        <div class="tab items" data-group="primary" data-tab="stigmaes">
             <ol class="items-list">
                 <li class="item flexrow item-header">
                   <div class="item-image"></div>
                   <div class="item-name">Nombre</div>
                   <div class="item-controls">
-                    <a class="item-control item-create" title="Create item" data-type="scar"><i class="fas fa-plus"></i> Añadir</a>
+                    <a class="item-control item-create" title="Create item" data-type="stigma"><i class="fas fa-plus"></i> Añadir</a>
                   </div>
                 </li>
-            {{#each scar as |item id|}}
+            {{#each stigma as |item id|}}
                 <li class="item flexrow" data-item-id="{{item._id}}">
                     <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                     

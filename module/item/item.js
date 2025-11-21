@@ -33,7 +33,7 @@ export class ratasenlasparedesItem extends Item {
       case 'profesion':
       case 'reputation':
       case 'mean':
-      case 'scar':
+      case 'stigma':
         // These types just need the basic properties
         break;
     }

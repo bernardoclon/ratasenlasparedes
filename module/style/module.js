@@ -185,7 +185,7 @@ function applyCompendiumBanner(popoutSection) {
     const sectionObserver = new MutationObserver((mutations) => {
       for (const m of mutations) {
         if (m.type === 'childList') {
-          // Buscar si hay una nueva imagen del header
+          // Bustigma si hay una nueva imagen del header
           const newImg = popoutSection.querySelector('.header-banner img');
           if (newImg) {
             // Reaplicar inmediatamente

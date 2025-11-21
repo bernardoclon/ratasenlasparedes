@@ -107,10 +107,10 @@ Hooks.once('init', async function () {
                 "profesion": "Profesión",
                 "reputation": "Reputación",
                 "mean": "Manía",
-                "scar": "Cicatriz"
+                "stigma": "Estigma"
             };
 
-            const feminineSpanishTypes = ["Arma", "Armadura", "Profesión", "Reputación", "Cicatriz", "Manía"];
+            const feminineSpanishTypes = ["Arma", "Armadura", "Profesión", "Reputación", "Manía"];
 
             const translatedType = typeTranslations[itemType] || itemType.charAt(0).toUpperCase() + itemType.slice(1);
 
@@ -122,6 +122,110 @@ Hooks.once('init', async function () {
             }
 
             document.updateSource({ name: newName });
+        }
+    });
+
+    Hooks.on("preUpdateActor", (actor, update, options, userId) => {
+        if (actor.type !== 'character' || !update.system) {
+            return;
+        }
+    
+        // CORRECCIÓN: Usar toObject() o deepClone para evitar modificar el actor in-place
+        const currentSystemData = actor.system.toObject ? actor.system.toObject() : foundry.utils.deepClone(actor.system);
+        
+        // Calculamos el sistema 'futuro' sin alterar el actual
+        const prospectiveSystem = foundry.utils.mergeObject(currentSystemData, update.system);
+
+        // --- stigma modifiers ---
+        let pvstigmaModifier = 0;
+        let pcstigmaModifier = 0;
+        const stigmas = actor.items.filter(i => i.type === 'stigma');
+        for (const stigma of stigmas) {
+            // Ensure stigma has system data before accessing it
+            if (!stigma.system) continue;
+
+            if (stigma.system.type === 'stigma' && stigma.system.atributo === 'pv') {
+                pvstigmaModifier -= 1;
+            }
+            if (stigma.system.type === 'mean' && stigma.system.atributo === 'pv') {
+                pvstigmaModifier += 1;
+            }
+            if (stigma.system.type === 'mean' && stigma.system.atributo === 'pc') {
+                pcstigmaModifier += 1;
+            }
+        }
+    
+        // --- PV Ceiling and Clamping ---
+        const musculo = prospectiveSystem.abilities.mus.value || 0;
+        const pvCeiling = 10 + musculo + pvstigmaModifier;
+    
+        // Verificar si el usuario está actualizando manualmente el PV Max
+        if (foundry.utils.hasProperty(update, "system.pv.max")) {
+            // Actualización manual: limitamos al techo calculado
+            const manualValue = foundry.utils.getProperty(update, "system.pv.max");
+            const clampedValue = Math.min(manualValue, pvCeiling);
+            foundry.utils.setProperty(update, "system.pv.max", clampedValue);
+        } else {
+            // Sin actualización manual: Forzamos la sincronización si está fuera de rango
+            // Si el actual es menor al techo (subió musculo), lo subimos.
+            // Si el actual es mayor al techo (bajó musculo), lo bajamos.
+            if (actor.system.pv.max !== pvCeiling) {
+                // Opcional: Si quieres permitir que sea menor (daño permanente), cambia !== por <
+                // Pero para automatización completa, usa !== o la lógica de abajo:
+                if (actor.system.pv.max < pvCeiling) {
+                    foundry.utils.setProperty(update, "system.pv.max", pvCeiling);
+                } else if (actor.system.pv.max > pvCeiling) {
+                    foundry.utils.setProperty(update, "system.pv.max", pvCeiling);
+                }
+            }
+        }
+
+        // Obtener el valor final de PV Max que tendrá el actor tras este update
+        const finalMaxPVForValueClamping = foundry.utils.hasProperty(update, "system.pv.max") 
+            ? foundry.utils.getProperty(update, "system.pv.max") 
+            : actor.system.pv.max;
+        
+        // Clamping del valor actual de PV (Vida)
+        if (foundry.utils.hasProperty(update, "system.pv.value")) {
+            const manualPvValue = foundry.utils.getProperty(update, "system.pv.value");
+            if (manualPvValue > finalMaxPVForValueClamping) {
+                foundry.utils.setProperty(update, "system.pv.value", finalMaxPVForValueClamping);
+            }
+        }
+    
+        // --- PC Ceiling and Clamping ---
+        const voluntad = prospectiveSystem.abilities.vol.value || 0;
+        const hechizos = actor.items.filter(i => i.type === 'spell').length;
+        const pcCeiling = 10 + voluntad - hechizos + pcstigmaModifier;
+        
+        // Verificar si el usuario está actualizando manualmente el PC Max
+        if (foundry.utils.hasProperty(update, "system.pc.max")) {
+            // Actualización manual
+            const manualValue = foundry.utils.getProperty(update, "system.pc.max");
+            const clampedValue = Math.min(manualValue, pcCeiling);
+            foundry.utils.setProperty(update, "system.pc.max", clampedValue);
+        } else {
+            // Sin actualización manual: Ajuste automático
+            if (actor.system.pc.max !== pcCeiling) {
+                 if (actor.system.pc.max < pcCeiling) {
+                    foundry.utils.setProperty(update, "system.pc.max", pcCeiling);
+                } else if (actor.system.pc.max > pcCeiling) {
+                    foundry.utils.setProperty(update, "system.pc.max", pcCeiling);
+                }
+            }
+        }
+    
+        // Obtener el valor final de PC Max
+        const finalMaxPCForValueClamping = foundry.utils.hasProperty(update, "system.pc.max") 
+            ? foundry.utils.getProperty(update, "system.pc.max") 
+            : actor.system.pc.max;
+
+        // Clamping del valor actual de PC (Cordura)
+        if (foundry.utils.hasProperty(update, "system.pc.value")) {
+            const manualPcValue = foundry.utils.getProperty(update, "system.pc.value");
+            if (manualPcValue > finalMaxPCForValueClamping) {
+                foundry.utils.setProperty(update, "system.pc.value", finalMaxPCForValueClamping);
+            }
         }
     });
 });

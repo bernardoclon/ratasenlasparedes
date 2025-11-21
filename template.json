@@ -58,7 +58,7 @@
     }
   },
   "Item": {
-    "types": ["item", "weapon", "spell", "armor", "scar", "profesion", "reputation"],
+    "types": ["item", "weapon", "spell", "armor", "stigma", "profesion", "reputation"],
     "templates": {
       "base": {
         "description": {
@@ -86,8 +86,10 @@
         "templates": ["base"],
         "protection": "0"
     },
-    "scar": {
-        "templates": ["base"]
+    "stigma": {
+        "templates": ["base"],
+        "atributo": "",
+        "type": ""
     },
     "profesion": {
         "templates": ["base"]
