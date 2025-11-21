@@ -69,7 +69,7 @@
 		},
 		{
 			"name": "experiencia",
-			"label": "Experiencia",
+			"label": "Estigmas",
 			"system": "ratasenlasparedes",
 			"path": "./packs/experiencia.db",
 			"type": "Item"
