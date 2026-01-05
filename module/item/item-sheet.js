@@ -124,7 +124,11 @@ export class ratasenlasparedesItemSheet extends ItemSheet {
       context.system.type = this.item.system.type || "";
       context.system.description = this.item.system.description || "";      
     }
-    
+    if (this.item.type === 'profesion' || this.item.type === 'reputation') {
+      context.system.selectorType = this.item.system.selectorType || "ninguno";
+      context.system.selectorValue = this.item.system.selectorValue || 0;
+      context.system.description = this.item.system.description || "";      
+    }    
     // Handle weapon-specific fields
     if (this.item.type === "weapon") {
       context.system.damage = this.item.system.damage || "";

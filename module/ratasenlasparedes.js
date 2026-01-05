@@ -157,6 +157,15 @@ Hooks.once('init', async function () {
                 pcstigmaModifier -= 1;
             }
         }
+        // Añadir modificadores directos desde Profesión/Reputación si aplican a PC/PV
+        const profs = actor.items.filter(i => i.type === 'profesion' || i.type === 'reputation');
+        for (const p of profs) {
+            if (!p.system) continue;
+            const sel = p.system.selectorType;
+            const val = parseInt(p.system.selectorValue) || 0;
+            if (sel === 'pv') pvstigmaModifier += val;
+            if (sel === 'pc') pcstigmaModifier += val;
+        }
     
         // --- PV Ceiling and Clamping ---
         const musculo = prospectiveSystem.abilities.mus.value || 0;
@@ -359,7 +368,10 @@ Hooks.on("createChatMessage", async (chatMSG, flags, userId) => {
         const actor = game.actors.get(chatMSG.speaker.actor);
         await chatMSG.setFlag("ratasenlasparedes", "profileImg", actor ? actor.img : game.user.avatar);
         if (chatMSG.isRoll) {
-            await chatMSG.setFlag("ratasenlasparedes", "detail", chatMSG.roll.total);
+            const existingDetail = chatMSG.getFlag("ratasenlasparedes", "detail");
+            if (existingDetail === undefined || existingDetail === null) {
+                await chatMSG.setFlag("ratasenlasparedes", "detail", chatMSG.roll.total);
+            }
         }
     }
     //     console.log(actor);

@@ -35,6 +35,9 @@ export class ratasenlasparedesItem extends Item {
       case 'mean':
       case 'stigma':
         // These types just need the basic properties
+        // Add selector defaults for profesion and reputation so UI can bind
+        if (!system.selectorType) system.selectorType = ""; // destreza, ingenio, musculos, violencia, voluntad, pc, pv
+        if (system.selectorValue === undefined) system.selectorValue = 0;
         break;
     }
   }

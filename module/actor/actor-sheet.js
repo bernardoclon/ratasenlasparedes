@@ -105,11 +105,80 @@ export class ratasenlasparedesActorSheet extends ActorSheet {
     // Rollable abilities.
     html.find('.rollable').click(this._onRoll.bind(this));
 
+    // PC roll dialog
+    html.find('.ratas-pc-roll').click(this._onPcRoll.bind(this));
+
     // Add immediate update for PV and PC max values
     html.find('input[name="system.pv.max"], input[name="system.pv.value"], input[name="system.pc.max"], input[name="system.pc.value"]').on('change', async event => {
         await this._onSubmit(event); // Trigger form submission on change
         this.render(false); // Update the sheet content to reflect changes
     });
+  }
+
+  async _onPcRoll(event) {
+    event.preventDefault();
+    const templateData = { };
+    const content = await renderTemplate('systems/ratasenlasparedes/templates/dialogs/pc-roll-dialog.html', templateData);
+
+    const dialog = new Dialog({
+      title: 'Lanzar PC',
+      content,
+      buttons: {
+        roll: {
+          icon: '<i class="fas fa-dice-d6"></i>',
+          label: 'Tirar',
+          callback: async (dlg) => {
+            const numDice = parseInt(dlg.find('[name="numDice"]').val()) || 0;
+            const faces = parseInt(dlg.find('[name="faces"]').val()) || 0;
+            const modRaw = dlg.find('[name="mod"]').val().trim();
+            const mod = modRaw === '' || modRaw === '-' ? 0 : parseInt(modRaw) || 0;
+
+            if (numDice < 1 || faces < 2) return ui.notifications.warn('Número de dados o caras inválido.');
+
+            // Crear fórmula incluyendo el mod
+            const formula = mod !== 0 ? `${numDice}d${faces}${mod > 0 ? '+' : ''}${mod}` : `${numDice}d${faces}`;
+            const result = await new Roll(formula).evaluate({async: true});
+
+            let total = result.total;
+            if (total < 0) total = 0;
+
+            const label = `Pierdes ${total} Puntos de Cordura`;
+            
+            AudioHelper.play({src: CONFIG.sounds.dice, volume: 0.8, autoplay: true, loop: false}, true);
+            
+            // Mostrar dados 3D si están disponibles
+            if (game.dice3d) {
+                await game.dice3d.showForRoll(result, game.user, true);
+            }
+            
+            // Renderizar con el total final, reemplazando si es negativo
+            let diceHtml = await result.render();
+            if (result.total < 0) {
+              diceHtml = diceHtml.replace(/-\d+/g, '0');
+            }
+
+            await ChatMessage.create({
+              speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+              flags: {'ratasenlasparedes':{'text':label, 'detail': total}},
+              type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+              content: diceHtml,
+              roll: result
+            });
+
+            if (total <= 0) return;
+            // Actualizar PC del actor
+            const current = Number(this.actor.system.pc?.value || 0);
+            let newPc = current - total;
+            if (newPc < 0) newPc = 0;
+            await this.actor.update({'system.pc.value': newPc});
+          }
+        }
+      },
+      default: 'roll',
+      classes: ['ratas-difficulty-dialog']
+    });
+
+    dialog.render(true);
   }
 
   /* -------------------------------------------- */
@@ -160,39 +229,47 @@ export class ratasenlasparedesActorSheet extends ActorSheet {
     // Manejar diferentes tipos de tiradas
     if (dataset.rollType === "ability") {
         // Mostrar diálogo de dificultad
-        const dialogContent = await renderTemplate("systems/ratasenlasparedes/templates/dialogs/difficulty-dialog.html", {
-            title: `Tirada de ${dataset.label}`
-        });
+      // Buscar profesiones/reputaciones aplicables a este atributo y convertir a objetos planos
+      const applicableItemsRaw = this.actor.items.filter(i => (i.type === 'profesion' || i.type === 'reputation') && i.system && i.system.selectorType === dataset.label);
+      const applicableItems = applicableItemsRaw.map(i => ({ _id: i.id || i._id, name: i.name, system: { selectorValue: i.system?.selectorValue || 0 } }));
 
-        let difficulty = await new Promise(resolve => {
-            new Dialog({
-                title: "Dificultad de la Tirada",
-                content: dialogContent,
-                buttons: {
-                    roll: {
-                        icon: '<i class="fas fa-dice-d20"></i>',
-                        label: "Tirar",
-                        callback: html => {
-                            const selected = html.find('[name="difficulty"]:checked');
-                            return resolve(selected.val());
-                        }
-                    }
-                },
-                default: "roll",
-                classes: ["ratas-difficulty-dialog"]
-            }).render(true);
-        });
+      const dialogContent = await renderTemplate("systems/ratasenlasparedes/templates/dialogs/difficulty-dialog.html", {
+        title: `Tirada de ${dataset.label}`,
+        items: applicableItems
+      });
 
-        // Preparar la tirada con la dificultad seleccionada
-        const difficultyText = difficulty === "+2" ? "fácil" : 
-                              difficulty === "-2" ? "difícil" : 
-                              "normal";
+      let dialogResult = await new Promise(resolve => {
+        new Dialog({
+          title: "Dificultad de la Tirada",
+          content: dialogContent,
+          buttons: {
+            roll: {
+              icon: '<i class="fas fa-dice-d20"></i>',
+              label: "Tirar",
+              callback: html => {
+                const selected = html.find('[name="difficulty"]:checked');
+                // Coleccionar items marcados
+                                const applied = html.find('[name="itemApply"]:checked').map((i,el) => el.value).get();
+                return resolve({ difficulty: selected.val(), applied });
+              }
+            }
+          },
+          default: "roll",
+          classes: ["ratas-difficulty-dialog"]
+        }).render(true);
+      });
+      // Preparar la tirada con la dificultad seleccionada
+      const difficulty = dialogResult.difficulty;
+      const appliedItems = dialogResult.applied || [];
+      const difficultyText = difficulty === "+2" ? "fácil" : 
+                  difficulty === "-2" ? "difícil" : 
+                  "normal";
 
-        const modText = difficulty === "0" ? "" : ` (${difficulty})`;
-        const rollString = difficulty === "0" ? dataset.roll : `${dataset.roll} ${difficulty}`;
+      const modText = difficulty === "0" ? "" : ` (${difficulty})`;
+      const rollString = difficulty === "0" ? dataset.roll : `${dataset.roll} ${difficulty}`;
         const label = dataset.label ? `Realiza una tirada <strong>${difficultyText}${modText}</strong> de <strong>${dataset.label}</strong>` : '';
         
-        const roll = new Roll(rollString, this.actor.system);
+      const roll = new Roll(rollString, this.actor.system);
             AudioHelper.play({src: CONFIG.sounds.dice, volume: 0.8, autoplay: true, loop: false}, true);
             const result = await roll.evaluate({async: true});
             
@@ -200,14 +277,42 @@ export class ratasenlasparedesActorSheet extends ActorSheet {
                 await game.dice3d.showForRoll(result, game.user, true);
             }
             const html = await result.render();
-            
+            // Calcular modificador por items seleccionados y su suma
+            let itemsModifier = 0;
+            let appliedItemsNames = [];
+            for (const id of appliedItems) {
+              const it = this.actor.items.get(id);
+              if (it && it.system) {
+                const v = parseInt(it.system.selectorValue) || 0;
+                itemsModifier += v;
+                const prefix = v >= 0 ? '+' : '';
+                appliedItemsNames.push(`${it.name}: ${prefix}${v}`);
+              }
+            }
+
+            const finalTotal = result.total + itemsModifier;
+
+            // Modificar el HTML renderizado del resultado para mostrar el total final
+            let rendered = html;
+            try {
+              const regex = new RegExp(`(>\\s*)${result.total}(\\s*<)`, 'g');
+              rendered = rendered.replace(regex, `$1${finalTotal}$2`);
+            } catch (e) {
+              console.warn("Failed to replace roll total in rendered HTML:", e);
+            }
+
+            // Agregar lista de modificadores aplicados si existen
+            if (appliedItemsNames.length > 0) {
+              rendered += `<div style="margin-top: 8px; font-size: 0.9em;">- ${appliedItemsNames.join('<br>- ')}</div>`;
+            }
+
             await ChatMessage.create({
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            flags: {'ratasenlasparedes':{'text':label}},
-            type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-            content: html,
-            roll: result
-        });
+              speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+              flags: {'ratasenlasparedes':{'text':label, 'detail': finalTotal}},
+              type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+              content: rendered,
+              roll: result
+            });
     }
     
     else if (dataset.rollType === "spell") {

@@ -1,0 +1,10 @@
+<div class="difficulty-dialog">
+    <div class="form-group">
+        <label class="dialog-title"><i class="fas fa-dice-d6"></i> Lanzar PC</label>
+        <div class="difficulty-options pc-roll-row">
+            <label>Dados: <input type="number" name="numDice" min="1" max="20" value="1" step="1" oninput="this.value = this.value ? Math.max(1, Math.min(20, Math.floor(this.value))) : ''"/></label>
+            <label>Caras: <input type="number" name="faces" min="2" max="100" value="6" step="1" oninput="this.value = this.value ? Math.max(2, Math.min(100, Math.floor(this.value))) : ''"/></label>
+            <label>Mod: <input type="text" name="mod" placeholder="0" oninput="this.value = this.value.replace(/[^-0-9]/g, '').replace(/^(-?).*?(-?\d*)$/, '$1$2')"/></label>
+        </div>
+    </div>
+</div>

@@ -53,6 +53,13 @@ export class ratasenlasparedesActor extends Actor {
         if (item.type === 'mean' && item.system.atributo === 'pv') pvstigmaModifier += 1;
         if (item.type === 'mean' && item.system.atributo === 'pc') pcstigmaModifier += 1;
         if (item.type === 'stigma' && item.system.atributo === 'pc') pcstigmaModifier -= 1;
+        // Profesión / Reputación: pueden aplicar modificadores directos a PC/PV
+        if ((item.type === 'profesion' || item.type === 'reputation') && item.system) {
+          const sel = item.system.selectorType;
+          const val = parseInt(item.system.selectorValue) || 0;
+          if (sel === 'pv') pvstigmaModifier += val;
+          if (sel === 'pc') pcstigmaModifier += val;
+        }
     }
 
     // --- CÁLCULO AUTOMÁTICO DE MÁXIMOS (CEILING) ---

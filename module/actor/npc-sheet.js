@@ -124,6 +124,67 @@ export class ratasenlasparedesNpcSheet extends ActorSheet {
 
     // Rollable abilities.
     html.find('.rollable').click(this._onRoll.bind(this));
+    // PC roll dialog
+    html.find('.ratas-pc-roll').click(this._onPcRoll.bind(this));
+  }
+
+  async _onPcRoll(event) {
+    event.preventDefault();
+    const templateData = { };
+    const content = await renderTemplate('systems/ratasenlasparedes/templates/dialogs/pc-roll-dialog.html', templateData);
+
+    const dialog = new Dialog({
+      title: 'Lanzar PC',
+      content,
+      buttons: {
+        roll: {
+          icon: '<i class="fas fa-dice-d6"></i>',
+          label: 'Tirar',
+          callback: async (dlg) => {
+            const numDice = parseInt(dlg.find('[name="numDice"]').val()) || 0;
+            const faces = parseInt(dlg.find('[name="faces"]').val()) || 0;
+            const modRaw = dlg.find('[name="mod"]').val().trim();
+            const mod = modRaw === '' || modRaw === '-' ? 0 : parseInt(modRaw) || 0;
+
+            if (numDice < 1 || faces < 2) return ui.notifications.warn('Número de dados o caras inválido.');
+
+            // Crear fórmula incluyendo el mod
+            const formula = mod !== 0 ? `${numDice}d${faces}${mod > 0 ? '+' : ''}${mod}` : `${numDice}d${faces}`;
+            const result = await new Roll(formula).evaluate({async: true});
+
+            let total = result.total;
+            if (total < 0) total = 0;
+
+            const label = `Tirada de PC: ${numDice}d${faces}${mod ? (mod>0? ' +' + mod : ' ' + mod) : ''}`;
+            
+            // Renderizar con el total final, reemplazando si es negativo
+            let diceHtml = await result.render();
+            if (result.total < 0) {
+              diceHtml = diceHtml.replace(/-\d+/g, '0');
+            }
+
+            await ChatMessage.create({
+              speaker: ChatMessage.getSpeaker({ actor: this.actor.id }),
+              flags: {'ratasenlasparedes':{'text':label, 'detail': total}},
+              flavor: label,
+              type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+              content: diceHtml,
+              roll: result
+            });
+
+            if (total <= 0) return;
+            const current = Number(this.actor.system.pc?.value || 0);
+            let newPc = current - total;
+            if (newPc < 0) newPc = 0;
+            await this.actor.update({'system.pc.value': newPc});
+          }
+        }
+      },
+      default: 'roll',
+      classes: ['ratas-difficulty-dialog']
+    });
+
+    dialog.render(true);
   }
 
   /* -------------------------------------------- */
