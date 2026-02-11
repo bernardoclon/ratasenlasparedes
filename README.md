@@ -1,37 +1,38 @@
-# 📜 El Necronomicón Digital
-Hemos preparado una selección de herramientas impías para narrar el inexorable descenso hacia la locura. Cada clic en esta interfaz es un rasguño en la puerta que retiene a los horrores exteriores.
+# 📜 Ratas en las Paredes: El Sistema Digital
+Hemos trasvasado la tinta maldita al código binario. Esta selección de herramientas impías ha sido diseñada para narrar el inexorable descenso hacia la locura. Cada clic en esta interfaz es un rasguño más en la puerta que retiene a los horrores exteriores.
 
-## La Erosión de la Mente
+## 🗝️ Las Llaves de la Locura (Características)
+Lo que yace dormido ha despertado con nuevas formas. El sistema ahora respira por sí mismo:
 
-🧠 Puntos de Cordura Fragiles: Monitoriza con precisión clínica cómo la psique de tus investigadores se desmorona ante la revelación de verdades cósmicas. Un contador regresivo hacia el manicomio... o algo peor.
+### ⚙️ Automatización de los Designios
+Ya no necesitas calcular tu condena. La automatización de reglas se encarga de gestionar los éxitos y los fracasos. El sistema interpreta los ritos mecánicos para que tú solo tengas que preocuparte por narrar el horror resultante.
 
-👁️ Visiones y Susurros: Herramientas para el Guardián, permitiendo arrastrar elementos a la realidad de los jugadores que desafían la lógica euclidiana.
+### 🩸 La Contabilidad de la Carne y la Mente
+Monitoriza con precisión clínica la fragilidad humana. El sistema gestiona automáticamente los Puntos de Cordura y de Salud. Observa cómo la barra de vida desciende hacia la tumba y cómo la psique de tus investigadores se desmorona ante la revelación de verdades cósmicas. Un contador regresivo hacia el manicomio... o algo peor.
 
-📓 El Diario del Descenso: Hojas de personaje diseñadas para reflejar no solo las habilidades físicas, sino las cicatrices mentales acumuladas tras cada encuentro con lo ignoto.
+### 📚 Bibliotecas de lo Oculto (Compendios)
+No llegas con las manos vacías ante el vacío. Hemos incluido compendios repletos de lo necesario para tejer tus misterios. Objetos malditos, horrores primigenios y fragmentos de conocimiento prohibido listos para ser arrastrados a tu mesa de juego.
 
-## Mecanismos del Horror
+### 🕯️ Inmersión en el Abismo
+La realidad se disuelve frente a tus ojos. Hemos diseñado una estética de hojas de personaje y cuadros de diálogo que transforman la pantalla en un legajo antiguo y perturbador. La experiencia visual es ahora totalmente inmersiva, haciendo que cada ficha parezca un documento rescatado de una casa en ruinas.
 
-🎲 La Tirada del Destino Atávico: Un sistema de reglas integrado donde el éxito suele ser solo una demora de la inevitable fatalidad. La suerte no existe aquí, solo la postergación del horror.
-
-🕯️ Atmósfera Ominosa: Elementos visuales e iconos (cortesía de los artesanos de game-icons.net) seleccionados para mantener una estética de desesperación lúgubre.
-
-🔍 Investigación de lo Blasfemo: Gestiona pistas y tomos prohibidos que nunca debieron ser abiertos. El conocimiento es poder, pero también es una sentencia de muerte.
+#### 👁️ Nota del Guardián: Para que la experiencia sea completa y el sonido del destino al caer tenga peso, no olvides instalar el módulo "Dice So Nice". Es la ofrenda final para que los dados rueden como huesos secos sobre la mesa virtual.
 
 ## 📦 El Ritual de Invocación (Instalación)
 
 ¿Te atreves a abrir la puerta? Si deseas invocar esta aberración en tu mesa virtual, sigue los pasos del ritual:
 
-Abre Foundry VTT y contempla el vacío.
+Abre Foundry VTT y contempla el vacío de tu configuración.
 
 Dirígete a la pestaña Systems.
 
 Haz clic en Install System.
 
 Pega el siguiente conjuro en el campo Manifest URL:
-```
+
 https://raw.githubusercontent.com/bernardoclon/ratasenlasparedes/refs/heads/main/system.json
-```
-Haz clic en Install. Reza a los dioses arquetípicos que tu cordura resista lo que has desatado.
+
+Haz clic en Install. Reza a los dioses arquetípicos para que tu cordura resista lo que has desatado.
 
 ## ⚠️ Advertencia de los Antiguos
 
@@ -47,7 +48,7 @@ A The Hill Press, por poner el tomo original en nuestras manos temblorosas y per
 
 Los iconos utilizados son ofrendas de game-icons.net.
 
-Los derechos de la obra "Ratas en las Paredes" pertenecen a The Hill Press.
+Los derechos de la obra original "Ratas en las Paredes" pertenecen a The Hill Press.
 
 Cualquier derecho sobre la arquitectura digital de este sistema, cuyo autor principal es jvir, queda bajo la licencia CC-BY-SA.
 
