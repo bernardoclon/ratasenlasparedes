@@ -23,7 +23,7 @@ Hemos preparado una selección de herramientas impías para narrar el inexorable
 
 Abre Foundry VTT y contempla el vacío.
 
-Dirígete a la pestaña Add-on Modules (Sistemas).
+Dirígete a la pestaña Systems.
 
 Haz clic en Install System.
 
