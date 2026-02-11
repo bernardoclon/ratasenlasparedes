@@ -1,5 +1,3 @@
-<div align="center">
-  
 # 📜 El Necronomicón Digital
 Hemos preparado una selección de herramientas impías para narrar el inexorable descenso hacia la locura. Cada clic en esta interfaz es un rasguño en la puerta que retiene a los horrores exteriores.
 
@@ -59,5 +57,3 @@ Los derechos de la obra "Ratas en las Paredes" pertenecen a The Hill Press.
 Cualquier derecho sobre la arquitectura digital de este sistema, cuyo autor principal es jvir, queda bajo la licencia CC-BY-SA.
 
 Ph'nglui mglw'nafh Cthulhu R'lyeh wgah'nagl fhtagn.
-
-</div>
