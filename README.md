@@ -28,7 +28,7 @@ Haz clic en Install System.
 
 Pega el siguiente conjuro en el campo Manifest URL:
 
-[ENLACE AL MANIFIESTO DEL SISTEMA AQUÍ]
+[https://raw.githubusercontent.com/bernardoclon/ratasenlasparedes/refs/heads/main/system.json]
 Haz clic en Install. Reza a los dioses arquetípicos que tu cordura resista lo que has desatado.
 
 🎮 Cómo Dirigir el Horror
