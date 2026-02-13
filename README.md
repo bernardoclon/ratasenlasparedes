@@ -1,6 +1,6 @@
-#![banner8](https://github.com/user-attachments/assets/39be5165-c457-4a9a-84a2-41e48aa13899)
+[banner8](https://github.com/user-attachments/assets/39be5165-c457-4a9a-84a2-41e48aa13899)
 
- 📜 Ratas en las Paredes: El Sistema Digital
+# 📜 Ratas en las Paredes: El Sistema Digital
 
 Hemos trasvasado la tinta maldita al código binario. Esta selección de herramientas impías ha sido diseñada para narrar el inexorable descenso hacia la locura. Cada clic en esta interfaz es un rasguño más en la puerta que retiene a los horrores exteriores.
 
