@@ -1,4 +1,4 @@
-[banner8](https://github.com/user-attachments/assets/39be5165-c457-4a9a-84a2-41e48aa13899)
+![banner8](https://github.com/user-attachments/assets/39be5165-c457-4a9a-84a2-41e48aa13899)
 
 # 📜 Ratas en las Paredes: El Sistema Digital
 
