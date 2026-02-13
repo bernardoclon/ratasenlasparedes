@@ -1,0 +1,39 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <img class="profile-img" src="{{img}}" data-edit="img" title="{{name}}"/>
+        <div class="header-fields">
+            <h1 class="charname"><input name="name" type="text" value="{{name}}" placeholder="Name"/></h1>
+            <div class="form-group item-meta">
+                <label>Aplicar a</label>
+                <div class="form-fields">
+                    <select name="system.selectorType" data-dtype="String">
+                        <option value="" {{#unless system.selectorType}}selected{{/unless}}>Ninguno</option>
+                        <option value="destreza" {{#if (eq system.selectorType "destreza")}}selected{{/if}}>Destreza</option>
+                        <option value="ingenio" {{#if (eq system.selectorType "ingenio")}}selected{{/if}}>Ingenio</option>
+                        <option value="musculos" {{#if (eq system.selectorType "musculos")}}selected{{/if}}>Músculo</option>
+                        <option value="violencia" {{#if (eq system.selectorType "violencia")}}selected{{/if}}>Violencia</option>
+                        <option value="voluntad" {{#if (eq system.selectorType "voluntad")}}selected{{/if}}>Voluntad</option>
+                        <option value="pc" {{#if (eq system.selectorType "pc")}}selected{{/if}}>PC</option>
+                        <option value="pv" {{#if (eq system.selectorType "pv")}}selected{{/if}}>PV</option>
+                    </select>
+                    <input type="number" name="system.selectorValue" data-dtype="Number" value="{{system.selectorValue}}" step="1" />
+                </div>
+            </div>
+    </header>
+
+    {{!-- Sheet Tab Navigation --}}
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="description">Description</a>
+    </nav>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+
+        
+
+        {{!-- Description Tab --}}
+        <div class="tab" data-group="primary" data-tab="description">
+            {{editor enrichedDescription target="system.description" button=true owner=true editable=editable engine="prosemirror" collaborate=false}}
+        </div>
+    </section>
+</form>

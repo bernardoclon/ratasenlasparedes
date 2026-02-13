@@ -1,0 +1,35 @@
+<div class="difficulty-dialog">
+    <div class="form-group">
+        <label class="dialog-title"><i class="fas fa-dice-d20"></i> {{title}}</label>
+        <div class="difficulty-options">
+            <label class="difficulty-option">
+                <input type="radio" name="difficulty" value="+2">
+                <span class="difficulty-label">Fácil (+2)</span>
+            </label>
+            <label class="difficulty-option">
+                <input type="radio" name="difficulty" value="0" checked>
+                <span class="difficulty-label">Normal</span>
+            </label>
+            <label class="difficulty-option">
+                <input type="radio" name="difficulty" value="-2">
+                <span class="difficulty-label">Difícil (-2)</span>
+            </label>
+        </div>
+    </div>
+    {{#if items}}
+    <div class="form-group modifiers-block">
+        <label class="dialog-title"><i class="fas fa-briefcase"></i> Modificadores</label>
+        <div class="modifiers-list">
+            {{#each items}}
+                <div class="modifier-row">
+                    <label class="modifier-option">
+                        <input type="checkbox" name="itemApply" value="{{this._id}}">
+                        <span class="modifier-name">{{this.name}}</span>
+                        <span class="modifier-value">({{this.system.selectorValue}})</span>
+                    </label>
+                </div>
+            {{/each}}
+        </div>
+    </div>
+    {{/if}}
+</div>
