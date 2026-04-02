@@ -427,7 +427,8 @@
 
 .ratasenlasparedes .items-list .item {
   height: 30px;
-  line-height: 24px;
+  display: flex;
+  align-items: center;
   padding: 3px 0;
   border-bottom: 1px solid #BBB;
 }
@@ -444,7 +445,9 @@
 }
 
 .ratasenlasparedes .items-list .item-name {
+  flex: 1;
   margin: 0;
+  font-size: 1.1em;
 }
 
 .ratasenlasparedes .items-list .item-controls {
@@ -827,6 +830,15 @@
 }
 
 /* Container Sheet Styles */
+.ratasenlasparedes.sheet.actor.container .sheet-header {
+    flex: 0 0 80px; /* Reduce la altura total del header */
+}
+
+.ratasenlasparedes.sheet.actor.container .sheet-header .profile-img {
+    flex: 0 0 70px;
+    height: 70px;
+}
+
 .ratasenlasparedes.sheet.actor.container .item-name.item-link {
     cursor: pointer;
 }

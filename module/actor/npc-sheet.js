@@ -11,8 +11,8 @@ export class ratasenlasparedesNpcSheet extends ActorSheet {
     return mergeObject(super.defaultOptions, {
       classes: ["ratasenlasparedes", "sheet", "actor", "npc"],
       //template: "systems/ratasenlasparedes/templates/actor/npc-sheet.html",
-      width: 600,
-      height: 600,
+      width: 520,
+      height: 730,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
     });
   }
