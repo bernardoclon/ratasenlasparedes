@@ -159,10 +159,12 @@
   background-image: url("/systems/ratasenlasparedes/img/back.jpg");
   background-size: 100%;
   font-family: Tox;
+  padding: 0; /* Eliminamos el padding para evitar el desbordamiento inferior */
 }
 
 .ratasenlasparedes.sheet.actor .window-content {
-  overflow: hidden; 
+  overflow: hidden;
+  display: flex;
 }
 
 .ratasenlasparedes.sheet.actor form {
@@ -170,6 +172,8 @@
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+  padding: 8px; /* Aplicamos el padding aquí para que el contenido no toque los bordes */
+  box-sizing: border-box;
 }
 
 .ratasenlasparedes .basic-data {
@@ -273,13 +277,25 @@
   min-height: 520px;
 }
 
+.ratasenlasparedes.sheet.item .editable{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+}
+
 .ratasenlasparedes .item-form {
   font-family: "Crimson", sans-serif;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 8px; /* Aplicamos el padding aquí para que el contenido no toque los bordes */
+  box-sizing: border-box; /* Aseguramos que el padding se incluya en el cálculo de altura */
 }
 
 .ratasenlasparedes.sheet.item .window-content {
   overflow-y: hidden;
+  display: flex;
 }
 
 .ratasenlasparedes .item-form select {
@@ -293,8 +309,8 @@
 
 .ratasenlasparedes .sheet-header {
   -webkit-box-flex: 0;
-  -ms-flex: 0 0 210px;
-  flex: 0 0 210px;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
   overflow: hidden;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -366,10 +382,20 @@
   overflow-y: auto;
   overflow-x: hidden;
   min-height: 0;
+  padding-bottom: 10px; /* Margen de cortesía para que el contenido no pegue abajo */
+}
+
+.ratasenlasparedes .sheet-body .tab.active {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .ratasenlasparedes .sheet-body .tab .editor {
-  height: 96%;
+  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .ratasenlasparedes .tox .tox-editor-container {
@@ -467,18 +493,18 @@
     background-color: rgba(0,0,0,0) !important;
 }
 .tox-tinymce {
-    height:100% !important;
+    flex: 1; /* Permitimos que crezca para ocupar el espacio restante */
     display:block;
-
 }
 .tox .tox-editor-container {
       background-color: rgba(0,0,0,0) !important;
+      flex: 1; /* Permitimos que crezca para ocupar el espacio restante */
 }
 .tox .tox-edit-area {
     padding: 0 8px;
     position: inherit;
-    min-height: 20px;
-    height: 200px;
+    flex: 1;
+    /* height: 100% !important; */ /* Eliminamos la altura fija para que flex: 1 funcione */
 }
 
 /* Items */
