@@ -104,43 +104,36 @@ export class ratasenlasparedesItemSheet extends ItemSheet {
     // Get data from super
     const context = await super.getData();
     
-    // Ensure system data exists
-    context.system = context.system || {};
-    context.system.description = context.system.description || "";
-    
+    // Fix [object Object] bug: ensure description is always a string in all possible paths
+    const system = this.item.system;
+    if (typeof system.description !== "string") system.description = "";
+    context.system = system;
+
     // Initialize system data if undefined
-    if (!this.item.system) {
+    if (!system) {
       this.item.system = {};
     }
     
-    // Ensure base properties exist with their current values
-    context.system.quantity = this.item.system.quantity;
-    context.system.weight = this.item.system.weight;
-    context.system.description = this.item.system.description || "";
-
     // Handle mean and stigma specific data
     if (this.item.type === 'stigma') {
       context.system.atributo = this.item.system.atributo || "ninguno";
       context.system.type = this.item.system.type || "";
-      context.system.description = this.item.system.description || "";      
     }
     if (this.item.type === 'profesion' || this.item.type === 'reputation') {
       context.system.selectorType = this.item.system.selectorType || "ninguno";
       context.system.selectorValue = this.item.system.selectorValue || 0;
-      context.system.description = this.item.system.description || "";      
     }    
     // Handle weapon-specific fields
     if (this.item.type === "weapon") {
       context.system.damage = this.item.system.damage || "";
-      context.system.description = this.item.system.description || "";
     }    // Ensure spell-specific fields exist if this is a spell
     if (this.item.type === "spell") {
       context.system.efect = this.item.system.efect || "1d6";
-      context.system.description = this.item.system.description || "";
     }
     
     // In V13, enrichHTML is required for proper editor functionality
-    context.enrichedDescription = await TextEditor.enrichHTML(context.system.description || "", {
+    // Aseguramos que la descripción sea siempre una cadena de texto antes de enriquecerla,
+    context.enrichedDescription = await TextEditor.enrichHTML(system.description, {
       async: true,
       secrets: this.document.isOwner,
       relativeTo: this.document

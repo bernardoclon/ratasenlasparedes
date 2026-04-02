@@ -13,7 +13,7 @@ export class ratasenlasparedesItem extends Item {
     const system = this.system;
 
     // Ensure basic properties exist
-    if (!system.description) system.description = "";
+    if (typeof system.description !== "string") system.description = "";
     if (!system.quantity) system.quantity = 1;
     if (!system.weight) system.weight = 0;
 
@@ -28,7 +28,6 @@ export class ratasenlasparedesItem extends Item {
       case 'spell':
         system.level = system.level ?? 1;
         system.cost = system.cost ?? 0;
-        system.description = system.description || "";
         break;
       case 'profesion':
       case 'reputation':
