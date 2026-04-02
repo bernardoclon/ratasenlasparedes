@@ -8,8 +8,8 @@ export class ratasenlasparedesContainerSheet extends ratasenlasparedesActorSheet
     return mergeObject(super.defaultOptions, {
       classes: ["ratasenlasparedes", "sheet", "actor", "container"],
       template: "systems/ratasenlasparedes/templates/actor/container-sheet.html",
-      width: 600,
-      height: 600,
+      width: 520,
+      height: 730,
     });
   }
 
