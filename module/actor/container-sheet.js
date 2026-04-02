@@ -48,8 +48,19 @@ export class ratasenlasparedesContainerSheet extends ratasenlasparedesActorSheet
     // Si no hay pestaña específica, por defecto 'item'
     const types = allowedTypes[tabName] || ['item', 'weapon', 'armor', 'spell'];
     
-    // Usamos el selector de tipo existente
-    const itemData = await ItemTypeSelection.create(this.actor, types);
+    let itemData;
+    // Solo mostramos el diálogo si hay más de un tipo posible
+    if (types.length > 1) {
+      itemData = await ItemTypeSelection.create(this.actor, types);
+    } else {
+      // Si solo hay uno, lo creamos directamente con el nombre base "Objeto"
+      // para que el hook preCreateItem gestione la traducción automática del nombre.
+      itemData = {
+        name: "Objeto",
+        type: types[0]
+      };
+    }
+
     if (!itemData) return;
 
     return await this.actor.createEmbeddedDocuments("Item", [itemData]);

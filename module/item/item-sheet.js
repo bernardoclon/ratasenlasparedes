@@ -67,8 +67,8 @@ export class ratasenlasparedesItemSheet extends ItemSheet {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       classes: ["ratasenlasparedes", "sheet", "item"],
-      width: 520,
-      height: 480,
+      width: 460,
+      height: 520,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
     });
   }

@@ -241,8 +241,23 @@ export class ratasenlasparedesNpcSheet extends ActorSheet {
       resources: ['item']
     };
 
-    // Open the item type selection dialog with filtered types
-    const itemData = await ItemTypeSelection.create(this.actor, allowedTypes[tabName]);
+    const types = allowedTypes[tabName];
+    let itemData;
+
+    // Solo mostramos el diálogo si hay más de un tipo posible
+    if (types && types.length > 1) {
+      itemData = await ItemTypeSelection.create(this.actor, types);
+    } else if (types && types.length === 1) {
+      // Si solo hay uno, lo creamos directamente
+      itemData = {
+        name: "Objeto",
+        type: types[0]
+      };
+    } else {
+      // Si no está definido en el mapa, mostramos el selector por defecto
+      itemData = await ItemTypeSelection.create(this.actor, types);
+    }
+
     if (!itemData) return; // User cancelled
 
     // Create the item
