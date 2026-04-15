@@ -190,7 +190,7 @@
   "secondaryTokenAttribute": "pc",
   "url": "https://github.com/bernardoclon/ratasenlasparedes",
   "manifest": "https://raw.githubusercontent.com/bernardoclon/ratasenlasparedes/refs/heads/main/system.json",
-  "download": "https://github.com/bernardoclon/ratasenlasparedes/archive/refs/tags/V2-1.zip",
+  "download": "https://github.com/bernardoclon/ratasenlasparedes/archive/refs/tags/V1.4.1.zip",
   "license": "LICENSE.txt",
   "background": "systems/ratasenlasparedes/img/banner.jpeg",
   "flags": {}
